@@ -1,7 +1,7 @@
-Project Name
+Remotion Emoji Picker
 ====
 
-Project description.
+Coding test for Remotion.
 
 - [Development](#development)
 

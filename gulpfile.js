@@ -15,7 +15,7 @@ var DevOps = require("dev-tasks"),
 
 //configure dev-tasks
 DevOps.init({
-    appName: 'project-name',
+    appName: 'remotion-emoji-picker',
     babelExtOptions: {
         "ignore": [
             "./src/styles"
