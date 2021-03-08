@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#view-container {
+    width: 100%;
+    height: 100%;
+}
+
+#remotion-app {
+    margin: 140px auto;
+    width: 90%;
+}
+
+#text-editor {
+    width: 100%;
+    height: 250px;
+}
+
+#emoji-picker .arrow {
+    width: 0.6rem;
+    height: 0.6rem;
+    z-index: -1;
+}
+
+#emoji-picker .arrow:before {
+    content: "";
+    background-color: #fff;
+    border: 1px #ccc solid;
+    width: 0.6rem;
+    height: 0.6rem;
+    transform: translate(-50%, -50%) rotate(45deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
