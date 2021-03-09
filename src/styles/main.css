@@ -41,3 +41,19 @@ html, body {
     top: 0;
     left: 0;
 }
+
+#add-content {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+}
+
+#add-content .tabs {
+    flex: 1;
+}
+
+#add-content .settings .convert-emoticons label {
+    padding-left: 4.1rem;
+}

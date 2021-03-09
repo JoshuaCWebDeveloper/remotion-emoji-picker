@@ -8,7 +8,10 @@
 //import modules
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Emoji } from 'emoji-mart';
+import { Emoji, emojiIndex  } from 'emoji-mart';
+import { Checkbox } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
+import { emojiMap } from 'smile2emoji';
 //import components
 import { EmojiPicker } from './EmojiPicker.js';
 //create our RemotionApp class
@@ -16,6 +19,7 @@ class RemotionApp extends React.Component {
     
     // init state
     state = {
+        convertEmoticons: true,
         emojiContainerElement: null,
         emojiReferenceElement: null,
         emojiPickerActive: false,
@@ -31,6 +35,10 @@ class RemotionApp extends React.Component {
     #handleEditorChange = this.handleEditorChange.bind(this);
     #handleEmojiPickerClick = this.handleEmojiPickerClick.bind(this);
     #handleSelectEmoji = this.handleSelectEmoji.bind(this);
+    #handleEmoticonSettingChange = this.handleEmoticonSettingChange.bind(this);
+    
+    // characters that trigger emoticon conversion
+    #EMOTE_TRIGGERS = " .,!?\n";
     
     getTextEditor () {
         return document.getElementById("text-editor");
@@ -61,12 +69,22 @@ class RemotionApp extends React.Component {
                     </textarea>
 
                     <footer id="add-content">
-                        <button
-                            className="emoji-picker" ref={this.#setEmojiReferenceRef}
-                            onClick={this.#handleEmojiPickerClick}
-                        >
-                            <Emoji emoji=":smiley:" size={16} />
-                        </button>
+                        <p className="tabs">
+                            <button
+                                className="emoji-picker" ref={this.#setEmojiReferenceRef}
+                                onClick={this.#handleEmojiPickerClick}
+                            >
+                                <Emoji emoji=":smiley:" size={16} />
+                            </button>
+                        </p>
+                
+                        <p className="settings">
+                            <Checkbox
+                                className="convert-emoticons" toggle label="Convert :) :( :|"
+                                checked={this.state.convertEmoticons}
+                                onChange={this.#handleEmoticonSettingChange}
+                            />
+                        </p>
                     </footer>
 
                     {
@@ -94,7 +112,44 @@ class RemotionApp extends React.Component {
     }
 
     handleEditorChange (e) {
-        this.setState({message: e.target.value});
+        var v = e.target.value,
+            // get editor
+            editor = this.getTextEditor(),
+            // split message on cursor position
+            preCursor = v.substring(0, editor.selectionStart),
+            postCursor = v.substring(editor.selectionEnd, v.length),
+            // focus on the message before the cursor
+            lastChar = preCursor.substr(-1);
+        // if the user just typed a space AND if we are to convert emoticons
+        if (
+            this.#EMOTE_TRIGGERS.includes(lastChar) &&
+            this.state.convertEmoticons
+        ) {
+            // if the last word is an emoticon
+            let words = preCursor.substr(0, preCursor.length-1).split(" "),
+                lastWord = words.slice(-1)[0],
+                lastWordNewline = lastWord.includes("\n");
+            // if last word contains newline
+            if (lastWordNewline) {
+                // move newline and text before it to previous word
+                let previousWord = words.slice(-2)[0],
+                    [lastWordPrefix, lastWordSuffix] = lastWord.split("\n");
+                words.splice(-2, 1, previousWord + " " + lastWordPrefix + "\n");
+                lastWord = lastWordSuffix;
+            }
+            if (emojiMap.hasOwnProperty(lastWord)) {
+                //update value with inserted emoji
+                preCursor = words.slice(0, -1).join(" ");
+                if (!lastWordNewline) {
+                    preCursor += " ";
+                }
+                preCursor += emojiMap[lastWord] + lastChar;
+                v = preCursor + postCursor;
+                //changing the message will move the cursor position, maintain cursor position
+                this.#updateCursorPosition = preCursor.length;
+            }
+        }
+        this.setState({message: v});
     }
 
     handleEmojiPickerClick (e) {
@@ -122,6 +177,11 @@ class RemotionApp extends React.Component {
         // maintain cursor position (for next potential insert)
         //editor.selectionStart = cursorPosition + 1;
         this.#updateCursorPosition = message.indexOf(textEnding);
+    }
+                
+    handleEmoticonSettingChange (e) {
+        // toggle setting
+        this.setState({convertEmoticons: !this.state.convertEmoticons});
     }
 };
 //define default props

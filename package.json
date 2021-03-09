@@ -38,6 +38,9 @@
     "redux-orm": "^0.16.2",
     "regenerator-runtime": "^0.13.7",
     "reselect": "^4.0.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3",
+    "smile2emoji": "^0.2.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
