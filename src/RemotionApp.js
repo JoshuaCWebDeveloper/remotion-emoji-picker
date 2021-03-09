@@ -21,6 +21,9 @@ class RemotionApp extends React.Component {
         emojiPickerActive: false,
         message: ""
     };
+
+    // track selection operations
+    #updateCursorPosition = null;
         
     // bind handlers
     #setEmojiContainerRef = this.setEmojiContainerRef.bind(this);
@@ -31,6 +34,18 @@ class RemotionApp extends React.Component {
     
     getTextEditor () {
         return document.getElementById("text-editor");
+    }
+
+    componentDidUpdate () {
+        // if we are to update cursor position
+        if (this.#updateCursorPosition !== null) {
+            let editor = this.getTextEditor();
+            // then do so
+            editor.selectionStart = this.#updateCursorPosition;
+            editor.selectionEnd = this.#updateCursorPosition;
+            // mark as done
+            this.#updateCursorPosition = null;
+        }
     }
     
     render () {
@@ -92,14 +107,21 @@ class RemotionApp extends React.Component {
     handleSelectEmoji (emoji) {
         // get editor
         var editor = this.getTextEditor(),
+            // get cursor position
+            cursorPosition = editor.selectionStart,
             // get current text
             curMsg = this.state.message,
+            // track end of text (to find new cursor position)
+            textEnding = curMsg.substring(editor.selectionEnd, curMsg.length),
             // create new message using cursor position/selected text
-            message = curMsg.substring(0, editor.selectionStart) + 
-                emoji.native +
-                curMsg.substring(editor.selectionEnd, curMsg.length);
+            message = curMsg.substring(0, cursorPosition) + emoji.native + textEnding;
         // update state
         this.setState({message});
+        // focus our editor (would have just lost it)
+        editor.focus();
+        // maintain cursor position (for next potential insert)
+        //editor.selectionStart = cursorPosition + 1;
+        this.#updateCursorPosition = message.indexOf(textEnding);
     }
 };
 //define default props

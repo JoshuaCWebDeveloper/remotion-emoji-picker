@@ -32,6 +32,10 @@ function EmojiPicker ({
         onSelectEmoji(emoji);
     }
     
+    function handlePickerClick (emoji, e) {
+        e.preventDefault();
+    }
+    
     return (
         <div
             id="emoji-picker" ref={setPopperElement}
@@ -39,7 +43,7 @@ function EmojiPicker ({
         >
             <div className="arrow" ref={setArrowElement} style={styles.arrow} />
         
-            <Picker onSelect={handleSelectEmoji} />    
+            <Picker onSelect={handleSelectEmoji} onClick={handlePickerClick} />    
         </div>
     );
     
