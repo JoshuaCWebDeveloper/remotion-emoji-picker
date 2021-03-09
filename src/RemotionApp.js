@@ -16,12 +16,14 @@ class RemotionApp extends React.Component {
     
     // init state
     state = {
+        emojiContainerElement: null,
         emojiReferenceElement: null,
         emojiPickerActive: false,
         message: ""
     };
         
     // bind handlers
+    #setEmojiContainerRef = this.setEmojiContainerRef.bind(this);
     #setEmojiReferenceRef = this.setEmojiReferenceRef.bind(this);
     #handleEditorChange = this.handleEditorChange.bind(this);
     #handleEmojiPickerClick = this.handleEmojiPickerClick.bind(this);
@@ -36,6 +38,7 @@ class RemotionApp extends React.Component {
             <section id="remotion-app">
                 <form>
                     <textarea
+                        ref={this.#setEmojiContainerRef}
                         id="text-editor" value={this.state.message}
                         onChange={this.#handleEditorChange}
                     >
@@ -55,6 +58,7 @@ class RemotionApp extends React.Component {
                         this.state.emojiPickerActive ?
 
                             <EmojiPicker
+                                containerElement={this.state.emojiContainerElement}
                                 referenceElement={this.state.emojiReferenceElement}
                                 onSelectEmoji={this.#handleSelectEmoji}
                             /> :
@@ -64,6 +68,10 @@ class RemotionApp extends React.Component {
                 </form>
             </section>
         );
+    }
+
+    setEmojiContainerRef (ref) {
+        this.setState({emojiContainerElement: ref});
     }
     
     setEmojiReferenceRef (ref) {

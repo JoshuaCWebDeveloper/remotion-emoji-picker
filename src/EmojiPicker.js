@@ -13,15 +13,20 @@ import 'emoji-mart/css/emoji-mart.css';
 import { usePopper } from 'react-popper';
 
 //create our EmojiPicker component
-function EmojiPicker ({onSelectEmoji=function () {}, referenceElement=null}) {
-    const [popperElement, setPopperElement] = useState(null);
-    const [arrowElement, setArrowElement] = useState(null);
-    const { styles, attributes } = usePopper(referenceElement, popperElement, {
-        modifiers: [
-            { name: 'arrow', options: { element: arrowElement } },
-            { name: 'offset', options: { offset: [20, 20] } }
-        ],
-    });
+function EmojiPicker ({
+    containerElement=null,
+    onSelectEmoji=function () {},
+    referenceElement=null
+}) {
+    const [popperElement, setPopperElement] = useState(null),
+        [arrowElement, setArrowElement] = useState(null),
+        { styles, attributes } = usePopper(referenceElement, popperElement, {
+            modifiers: [
+                { name: 'arrow', options: { element: arrowElement } },
+                { name: 'offset', options: { offset: [20, 20] } },
+                { name: 'preventOverflow', options: { boundary: containerElement } }
+            ]
+        });
     
     function handleSelectEmoji (emoji) {
         onSelectEmoji(emoji);
@@ -42,6 +47,7 @@ function EmojiPicker ({onSelectEmoji=function () {}, referenceElement=null}) {
 };
 //define props
 EmojiPicker.propTypes = {
+    containerElement: PropTypes.object,
     onSelectEmoji: PropTypes.func,
     referenceElement: PropTypes.object
 };
