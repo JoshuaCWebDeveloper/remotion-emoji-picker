@@ -162,21 +162,22 @@ class RemotionApp extends React.Component {
     handleSelectEmoji (emoji) {
         // get editor
         var editor = this.getTextEditor(),
-            // get cursor position
-            cursorPosition = editor.selectionStart,
             // get current text
             curMsg = this.state.message,
-            // track end of text (to find new cursor position)
-            textEnding = curMsg.substring(editor.selectionEnd, curMsg.length),
+            // split text by cursor position, append emoji before cursor
+            preCursor = curMsg.substring(0, editor.selectionStart) + emoji.native,
+            postCursor = curMsg.substring(editor.selectionEnd, curMsg.length),
             // create new message using cursor position/selected text
-            message = curMsg.substring(0, cursorPosition) + emoji.native + textEnding;
+            message = preCursor + postCursor;
         // update state
         this.setState({message});
         // focus our editor (would have just lost it)
         editor.focus();
         // maintain cursor position (for next potential insert)
         //editor.selectionStart = cursorPosition + 1;
-        this.#updateCursorPosition = message.indexOf(textEnding);
+        //this.#updateCursorPosition = message.indexOf(textEnding);
+        this.#updateCursorPosition = preCursor.length;
+
     }
                 
     handleEmoticonSettingChange (e) {
