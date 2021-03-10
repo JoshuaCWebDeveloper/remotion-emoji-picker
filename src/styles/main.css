@@ -15,7 +15,16 @@ html, body {
 }
 
 #remotion-app {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
     margin: 140px auto;
+    width: 90%;
+}
+
+#remotion-app form {
     width: 90%;
 }
 

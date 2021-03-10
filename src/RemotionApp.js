@@ -23,7 +23,8 @@ class RemotionApp extends React.Component {
         emojiContainerElement: null,
         emojiReferenceElement: null,
         emojiPickerActive: false,
-        message: ""
+        message: "",
+        trackedEmojis: {}
     };
 
     // track selection operations
@@ -99,6 +100,14 @@ class RemotionApp extends React.Component {
                             null
                     }
                 </form>
+                
+                <ul className="tracked-emojis">
+                    {
+                        Object.entries(this.state.trackedEmojis).map(([emoji, count]) => (
+                            <li key={emoji}>{emoji}: {count}</li>
+                        ))
+                    }
+                </ul>
             </section>
         );
     }
@@ -177,7 +186,17 @@ class RemotionApp extends React.Component {
         //editor.selectionStart = cursorPosition + 1;
         //this.#updateCursorPosition = message.indexOf(textEnding);
         this.#updateCursorPosition = preCursor.length;
-
+        
+        
+        // time to track the emoji
+        const trackedState = Object.assign({}, this.state.trackedEmojis);
+        if (trackedState.hasOwnProperty(emoji.native)) {
+            trackedState[emoji.native]++;
+        }
+        else {
+            trackedState[emoji.native] = 1;
+        }
+        this.setState({trackedEmojis: trackedState});
     }
                 
     handleEmoticonSettingChange (e) {
