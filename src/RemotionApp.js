@@ -13,7 +13,7 @@ import { Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { emojiMap } from 'smile2emoji';
 //import components
-import { EmojiPicker } from './EmojiPicker.js';
+import { EmojiPickerRaw } from './EmojiPickerRaw.js';
 //create our RemotionApp class
 class RemotionApp extends React.Component {
     
@@ -90,7 +90,7 @@ class RemotionApp extends React.Component {
                     {
                         this.state.emojiPickerActive ?
 
-                            <EmojiPicker
+                            <EmojiPickerRaw
                                 containerElement={this.state.emojiContainerElement}
                                 referenceElement={this.state.emojiReferenceElement}
                                 onSelectEmoji={this.#handleSelectEmoji}
